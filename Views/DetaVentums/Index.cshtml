@@ -1,0 +1,66 @@
+﻿@model IEnumerable<EntreEspeciesNuevo.Models.DetaVentum>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Cantidad)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SubTotalPro)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SubTotalSer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdProductoNavigation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdServicioNavigation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdVentaNavigation)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cantidad)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SubTotalPro)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SubTotalSer)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdProductoNavigation.IdProducto)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdServicioNavigation.IdServicio)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdVentaNavigation.IdVenta)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.IdDetalleV">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.IdDetalleV">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.IdDetalleV">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

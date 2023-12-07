@@ -1,0 +1,122 @@
+﻿@model EntreEspeciesNuevo.Models.Compra
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    /* Estilos generales */
+    body {
+        display:flex;
+        background-color: #f0f8ff; /* Azul claro */
+        color: #333; /* Color de texto principal */
+    }
+
+    h1 {
+        color: #4169e1; /* Azul real */
+    }
+
+    /* Estilos para la tabla de detalles de compra */
+    .table {
+        width: 100%;
+        margin-bottom: 1rem;
+        color: #333; /* Color de texto principal */
+        background-color: #fff;
+        border-collapse: collapse;
+    }
+
+        .table th,
+        .table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd; /* Línea divisoria gris claro */
+        }
+
+        .table th {
+            background-color: #4169e1; /* Azul real */
+            color: #fff; /* Texto blanco */
+        }
+
+    /* Estilos para los detalles de compra */
+    .col-sm-2,
+    .col-sm-10 {
+        margin-bottom: 1rem;
+    }
+
+    /* Enlace para regresar a la lista */
+    a {
+        color: #4169e1; /* Azul real */
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+        a:hover {
+            text-decoration: underline;
+        }
+</style>
+
+<h1>DETALLES DE COMPRA</h1>
+
+<dl class="row">
+    <dt class="col-sm-2">
+        Fecha de la Compra
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.FechaCompra)
+    </dd>
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.Total)
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.Total)
+    </dd>
+
+    <!-- Agrega otros campos de compra que quieras mostrar -->
+
+    <dt class="col-sm-2">
+        Detalles de Compra
+    </dt>
+    <dd class="col-sm-10">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Producto
+                    </th>
+                    <th>
+                        Cantidad
+                    </th>
+                    <th>
+                        Precio de Compra
+                    </th>
+
+                    <!-- Agrega más columnas si es necesario -->
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var detalle in Model.DetaCompras)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => detalle.ProductoNombre)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => detalle.Cantidad)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => detalle.PrecioCompra)
+                        </td>
+
+                        <!-- Agrega más celdas si es necesario -->
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </dd>
+</dl>
+
+<p>
+    <a asp-action="Index">Regresar</a>
+</p>

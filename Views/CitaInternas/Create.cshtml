@@ -1,0 +1,775 @@
+﻿@model EntreEspeciesNuevo.models.CitaInterna
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    body {
+        display:flex;
+        background-image: url('/images/fondo.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+</style>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<div class="row justify-content-center">
+    <div class="col-md-4">
+        <h4 class="card-title">Crear Cita Interna</h4>
+        <hr />
+        <form asp-action="Create" >
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+@*             <div class="form-group">
+                <label asp-for="DocumentoCliente" class="control-label">Documento Cliente</label>
+                <input asp-for="DocumentoCliente" class="form-control" required />
+            </div> *@
+            <div class="form-group">
+                <label asp-for="DocumentoCliente" class="control-label"></label>
+                <input asp-for="DocumentoCliente" class="form-control" required pattern=".{7,10}" title="El documento debe tener entre 7 y 10 caracteres." />
+                <span asp-validation-for="DocumentoCliente" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="IdMascota" class="control-label">Mascota</label>
+                <select asp-for="IdMascota" class="form-control" required>
+                    <option value=""></option>
+                </select>
+                <span asp-validation-for="IdMascota" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NomCita" class="control-label">Nombre del servicio</label>
+                <select asp-for="NomCita" class="form-control" required>
+                    <option value=""></option>
+                    <option value="Baño y peluquería">Baño y peluquería</option>
+                    <option value="Consulta veterinaria">Consulta veterinaria</option>
+                    <option value="Vacunación">Vacunación</option>
+                    <option value="Cirugía">Cirugía</option>
+                    <option value="Odontología veterinaria">Odontología veterinaria</option>
+                    <option value="Exámenes de laboratorio">Exámenes de laboratorio</option>
+                    <option value="Hospitalización">Hospitalización</option>
+                    <option value="Terapia física">Terapia física</option>
+                    <option value="Paseos y ejercicio">Paseos y ejercicio</option>
+                    <option value="Estética y belleza">Estética y belleza</option>
+                    <option value="Masajes terapéuticos">Masajes terapéuticos</option>
+                    <option value="Servicio de transporte de mascotas">Servicio de transporte de mascotas</option>
+                </select>
+                <span asp-validation-for="NomCita" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FechaHora" class="control-label">Fecha y Hora</label>
+                <input asp-for="FechaHora" class="form-control" type="datetime-local" required />
+                <span asp-validation-for="FechaHora" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Estado" class="control-label">Estado</label>
+                <input asp-for="Estado" class="form-control" readonly value="Pendiente" />
+                <span asp-validation-for="Estado" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Precio" class="control-label">Precio</label>
+                <input asp-for="Precio" class="form-control" required />
+                <span asp-validation-for="Precio" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group text-center">
+                <button type="submit" class="btn btn-primary">Crear</button>
+                <a asp-action="Index" class="btn btn-secondary">Volver</a>
+            </div>
+            
+        </form>
+    </div>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        $("#form").submit(function () {
+            if (!validarCampo('DocumentoCliente', 'Debe Ingresar Un Documento')) return false;
+            if (!validarCampo('NombreCliente', 'Debe Ingresar Un Nombre')) return false;
+            if (!validarCampo('Direccion', 'Debe Ingresar Una Direccion')) return false;
+            if (!validarCampo('Telefono', 'Debe Ingresar Un Telefono')) return false;
+            if (!validarCampo('Correo', 'Debe Ingresar Un Correo')) return false;
+
+            // Mostrar ventana de confirmación
+            mostrarAlerta();
+            return true; // Evitar el envío del formulario
+        });
+
+        function validarCampo(nombreCampo, mensaje) {
+            if ($("[name='" + nombreCampo + "']").val().trim().length < 1) {
+                mostrarAlertaWarning(mensaje);
+                return false;
+            }
+            return true;
+        }
+
+        function mostrarAlertaWarning(mensaje) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Por Favor Llene Los Campos',
+                text: mensaje,
+                footer: 'Sistema de Información'
+            });
+        }
+
+        function mostrarAlerta() {
+            Swal.fire({
+                icon: 'success',
+                title: 'Registro Exitoso',
+                text: 'El Cliente se registró correctamente.',
+                footer: 'Sistema de Información',
+                showConfirmButton: false
+            });
+
+            setTimeout(function () {
+                // window.location.href = 'Clientes';
+                window.location.href = '/Clientes/Index';
+
+            }, 3000);
+        }
+
+        function validatenombre(event) {
+            const inputValue = event.target.value;
+
+            if (/[^a-zA-Z\s]/.test(inputValue)) {
+                event.target.value = inputValue.replace(/[^a-zA-Z\s]/g, '');
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Carácter inválido',
+                    text: 'Solo se permite ingresar letras',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+        }
+        function validatedocumento(event) {
+            const keyCode = event.keyCode || event.which;
+            const allowedKeys = [8, 9, 37, 39, 46]; // Teclas permitidas: retroceso, tabulación, flechas izquierda/derecha, suprimir
+            const inputValue = event.target.value;
+
+            if (!allowedKeys.includes(keyCode) && isNaN(inputValue)) {
+                // Eliminar el último carácter ingresado
+                event.target.value = event.target.value.slice(0, -1);
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Carácter inválido',
+                    text: 'Solo se permite ingresar números',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+        }
+
+
+
+
+
+        $(document).ready(function () {
+            // Script para la validación de la fecha
+            var fechaInput = $('input[name="FechaHora"]');
+            fechaInput.attr('min', new Date().toISOString().slice(0, 16));
+
+            fechaInput.change(function () {
+                var selectedDate = new Date($(this).val());
+                var currentDate = new Date();
+
+                if (selectedDate < currentDate) {
+                    alert("No se puede seleccionar una fecha pasada. Por favor, elige una fecha futura.");
+                    $(this).val("");
+                }
+            });
+
+            // Script para la obtención de mascotas por documento
+            $("#DocumentoCliente").on('input', function () {
+                var documentoCliente = $(this).val();
+                if (documentoCliente.trim() !== '') {
+                    $.ajax({
+                        url: "/CitaInternas/ObtenerMascotasPorDocumento",
+                        data: { documentoCliente: documentoCliente },
+                        type: "GET",
+                        success: function (data) {
+                            // Limpiar y agregar las opciones al select de IdMascota
+                            $("#IdMascota").empty();
+                            $.each(data, function (index, item) {
+                                $("#IdMascota").append('<option value="' + item.value + '">' + item.text + '</option>');
+                            });
+                        },
+                        error: function (response) {
+                            console.log(response);
+                        }
+                    });
+                } else {
+                    // Limpiar el select de IdMascota si el campo DocumentoCliente está vacío
+                    $("#IdMascota").empty();
+                }
+            });
+        });
+
+
+
+
+
+        // Nuevas funciones de validación para la vista de citas
+        $("#form").submit(function () {
+            if (!validarCampo('DocumentoCliente', 'Debe Ingresar Un Documento')) return false;
+            // Agrega aquí las demás validaciones que necesites sin repetir la lógica existente
+            return true;
+        });
+
+        function validarCampo(nombreCampo, mensaje) {
+            if ($("[name='" + nombreCampo + "']").val().trim().length < 1) {
+                mostrarAlertaWarning(mensaje);
+                return false;
+            }
+            return true;
+        }
+
+        function mostrarAlertaWarning(mensaje) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Por Favor Llene Los Campos',
+                text: mensaje,
+                footer: 'Sistema de Información'
+            });
+        }
+
+        function mostrarAlerta() {
+            Swal.fire({
+                icon: 'success',
+                title: 'Registro Exitoso',
+                text: 'La Cita Interna se registró correctamente.',
+                footer: 'Sistema de Información',
+                showConfirmButton: false
+            });
+
+            setTimeout(function () {
+                window.location.href = '/CitaInternas/Index';
+            }, 3000);
+        }
+    </script>
+}
+
+
+@* @section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Script para la validación de la fecha
+            var fechaInput = $('input[name="FechaHora"]');
+            fechaInput.attr('min', new Date().toISOString().slice(0, 16));
+
+            fechaInput.change(function () {
+                var selectedDate = new Date($(this).val());
+                var currentDate = new Date();
+
+                if (selectedDate < currentDate) {
+                    alert("No se puede seleccionar una fecha pasada. Por favor, elige una fecha futura.");
+                    $(this).val("");
+                }
+            });
+
+            // Script para la obtención de mascotas por documento
+            $("#DocumentoCliente").on('input', function () {
+                var documentoCliente = $(this).val();
+                if (documentoCliente.trim() !== '') {
+                    $.ajax({
+                        url: "/CitaInternas/ObtenerMascotasPorDocumento",
+                        data: { documentoCliente: documentoCliente },
+                        type: "GET",
+                        success: function (data) {
+                            // Limpiar y agregar las opciones al select de IdMascota
+                            $("#IdMascota").empty();
+                            $.each(data, function (index, item) {
+                                $("#IdMascota").append('<option value="' + item.value + '">' + item.text + '</option>');
+                            });
+                        },
+                        error: function (response) {
+                            console.log(response);
+                        }
+                    });
+                } else {
+                    // Limpiar el select de IdMascota si el campo DocumentoCliente está vacío
+                    $("#IdMascota").empty();
+                }
+            });
+        });
+    </script>
+}
+ *@
+
+
+
+@*
+
+
+@model EntreEspeciesNuevo.models.CitaInterna
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    body {
+        background-image: url('/images/fondo.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+</style>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<div class="row justify-content-center">
+    <div class="col-md-4">
+        <h4 class="card-title">Crear Cita Interna</h4>
+        <hr />
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="DocumentoCliente" class="control-label">Documento Cliente</label>
+                <select asp-for="DocumentoCliente" class="form-control" asp-items="ViewBag.DocumentoCliente"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdMascota" class="control-label">Mascota</label>
+                <select asp-for="IdMascota" class="form-control" required>
+                    <option value=""></option>
+                </select>
+                <span asp-validation-for="IdMascota" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NomCita" class="control-label">Nombre del servicio</label>
+                <select asp-for="NomCita" class="form-control" required>
+                    <option value=""></option>
+                    <option value="Baño y peluquería">Baño y peluquería</option>
+                    <option value="Consulta veterinaria">Consulta veterinaria</option>
+                    <option value="Vacunación">Vacunación</option>
+                    <option value="Cirugía">Cirugía</option>
+                    <option value="Odontología veterinaria">Odontología veterinaria</option>
+                    <option value="Exámenes de laboratorio">Exámenes de laboratorio</option>
+                    <option value="Hospitalización">Hospitalización</option>
+                    <option value="Terapia física">Terapia física</option>
+                    <option value="Paseos y ejercicio">Paseos y ejercicio</option>
+                    <option value="Estética y belleza">Estética y belleza</option>
+                    <option value="Masajes terapéuticos">Masajes terapéuticos</option>
+                    <option value="Servicio de transporte de mascotas">Servicio de transporte de mascotas</option>
+                </select>
+                <span asp-validation-for="NomCita" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FechaHora" class="control-label">Fecha y Hora</label>
+                <input asp-for="FechaHora" class="form-control" required />
+                <span asp-validation-for="FechaHora" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Estado" class="control-label">Estado</label>
+                <input asp-for="Estado" class="form-control" readonly value="Pendiente" />
+                <span asp-validation-for="Estado" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Precio" class="control-label">Precio</label>
+                <input asp-for="Precio" class="form-control" required />
+                <span asp-validation-for="Precio" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group text-center">
+                <button type="submit" class="btn btn-primary">Crear</button>
+                <a asp-action="Index" class="btn btn-secondary">Volver</a>
+            </div>
+            <!-- Resto del formulario... -->
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#DocumentoCliente").change(function () {
+                var documentoCliente = $(this).val();
+                $.ajax({
+                    url: "/CitaInternas/ObtenerMascotasPorDocumento",
+                    data: { documentoCliente: documentoCliente },
+                    type: "GET",
+                    success: function (data) {
+                        // Limpiar y agregar las opciones al select de IdMascota
+                        $("#IdMascota").empty();
+                        $.each(data, function (index, item) {
+                            $("#IdMascota").append('<option value="' + item.value + '">' + item.text + '</option>');
+                        });
+                    },
+                    error: function (response) {
+                        console.log(response);
+                    }
+                });
+            });
+        });
+    </script>
+}
+
+ *@
+@*
+
+@model EntreEspeciesNuevo.models.CitaInterna
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    body {
+        background-image: url('/images/fondo.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+</style>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<div class="row justify-content-center">
+    <div class="col-md-4">
+        <h4 class="card-title">Crear Cita Interna</h4>
+        <hr />
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="IdMascota" class="control-label">IdMascota</label>
+                <select asp-for="IdMascota" class="form-control" asp-items="ViewBag.IdMascota"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="DocumentoCliente" class="control-label">Documento Cliente</label>
+                <select asp-for="DocumentoCliente" class="form-control" asp-items="ViewBag.DocumentoCliente"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="NomCita" class="control-label">Nombre del servicio</label>
+                <select asp-for="NomCita" class="form-control" required>
+                    <option value=""></option>
+                    <option value="Baño y peluquería">Baño y peluquería</option>
+                    <option value="Consulta veterinaria">Consulta veterinaria</option>
+                    <option value="Vacunación">Vacunación</option>
+                    <option value="Cirugía">Cirugía</option>
+                    <option value="Odontología veterinaria">Odontología veterinaria</option>
+                    <option value="Exámenes de laboratorio">Exámenes de laboratorio</option>
+                    <option value="Hospitalización">Hospitalización</option>
+                    <option value="Terapia física">Terapia física</option>
+                    <option value="Paseos y ejercicio">Paseos y ejercicio</option>
+                    <option value="Estética y belleza">Estética y belleza</option>
+                    <option value="Masajes terapéuticos">Masajes terapéuticos</option>
+                    <option value="Servicio de transporte de mascotas">Servicio de transporte de mascotas</option>
+                    <option value=""></option>
+                    <!-- Otras opciones... -->
+                </select>
+                <span asp-validation-for="NomCita" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FechaHora" class="control-label">Fecha y Hora</label>
+                <input asp-for="FechaHora" class="form-control" required />
+                <span asp-validation-for="FechaHora" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Estado" class="control-label">Estado</label>
+                <input asp-for="Estado" class="form-control" readonly value="Pendiente" />
+                <span asp-validation-for="Estado" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Precio" class="control-label">Precio</label>
+                <input asp-for="Precio" class="form-control" required />
+                <span asp-validation-for="Precio" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group text-center">
+                <button type="submit" class="btn btn-primary">Crear</button>
+                <a asp-action="Index" class="btn btn-secondary">Volver</a>
+            </div>
+            <!-- Resto del formulario... -->
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+
+
+    <script>
+        $(document).ready(function () {
+            $("#DocumentoCliente").change(function () {
+                var documentoCliente = $(this).val();
+                $.ajax({
+                    url: "/CitaInternas/ObtenerMascotasPorDocumentoCliente",
+                    data: { documentoCliente: documentoCliente },
+                    type: "GET",
+                    success: function (data) {
+                        // Limpiar y agregar las opciones al select de IdMascota
+                        $("#IdMascota").empty();
+                        $.each(data, function (index, item) {
+                            $("#IdMascota").append('<option value="' + item.value + '">' + item.text + '</option>');
+                        });
+                    },
+                    error: function (response) {
+                        console.log(response);
+                    }
+                });
+            });
+        });
+    </script>
+ *@
+@*  <script>
+        $(document).ready(function () {
+            $("#IdMascota").change(function () {
+                var mascotaId = $(this).val();
+                $.ajax({
+                    url: "/CitaInternas/ObtenerDocumentosPorMascota",
+                    data: { idMascota: mascotaId },
+                    type: "GET",
+                    success: function (data) {
+                        // Limpiar y agregar las opciones al select de DocumentoCliente
+                        $("#DocumentoCliente").empty();
+                        $.each(data, function (index, item) {
+                            $("#DocumentoCliente").append('<option value="' + item.value + '">' + item.text + '</option>');
+                        });
+                    },
+                    error: function (response) {
+                        console.log(response);
+                    }
+                });
+            });
+        });
+    </script> *@
+}
+
+
+@*
+
+
+
+@model EntreEspeciesNuevo.models.CitaInterna
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    body {
+        background-image: url('/images/fondo.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+</style>
+
+<div class="row justify-content-center">
+    <div class="col-md-4">
+        <h4 class="card-title">Crear Cita Interna</h4>
+        <hr />
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="IdMascota" class="control-label">IdMascota</label>
+                <select asp-for="IdMascota" class="form-control" asp-items="ViewBag.IdMascota"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="DocumentoCliente" class="control-label"></label>
+                <select asp-for="DocumentoCliente" class="form-control" asp-items="ViewBag.DocumentoCliente"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="NomCita" class="control-label">Nombre del servicio</label>
+                <select asp-for="NomCita" class="form-control" required>
+                    <option value=""></option>
+                    <option value="Baño y peluquería">Baño y peluquería</option>
+                    <option value="Consulta veterinaria">Consulta veterinaria</option>
+                    <option value="Vacunación">Vacunación</option>
+                    <option value="Cirugía">Cirugía</option>
+                    <option value="Odontología veterinaria">Odontología veterinaria</option>
+                    <option value="Exámenes de laboratorio">Exámenes de laboratorio</option>
+                    <option value="Hospitalización">Hospitalización</option>
+                    <option value="Terapia física">Terapia física</option>
+                    <option value="Paseos y ejercicio">Paseos y ejercicio</option>
+                    <option value="Estética y belleza">Estética y belleza</option>
+                    <option value="Masajes terapéuticos">Masajes terapéuticos</option>
+                    <option value="Servicio de transporte de mascotas">Servicio de transporte de mascotas</option>
+                    <option value=""></option>
+                </select>
+                <span asp-validation-for="NomCita" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FechaHora" class="control-label">Fecha y Hora</label>
+                <input asp-for="FechaHora" class="form-control" required />
+                <span asp-validation-for="FechaHora" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Estado" class="control-label">Estado</label>
+                <input asp-for="Estado" class="form-control" readonly value="Pendiente" />
+                <span asp-validation-for="Estado" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Precio" class="control-label">Precio</label>
+                <input asp-for="Precio" class="form-control" required />
+                <span asp-validation-for="Precio" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group text-center">
+                <button type="submit" class="btn btn-primary">Crear</button>
+                <a asp-action="Index" class="btn btn-secondary">Volver</a>
+            </div>
+        </form>
+    </div>
+</div>
+ *@
+
+@*
+
+@model EntreEspeciesNuevo.models.CitaInterna
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+
+    body {
+        background-image: url('/images/fondo.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+</style>
+
+@*class="card" style="max-width: 400px; margin: 0 auto;"
+
+<div class="row justify-content-center">
+    <div class="col-md-4">
+        <h4 class="card-title">Crear Cita Interna</h4>
+        <hr />
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="IdMascota" class="control-label">IdMascota</label>
+                <select asp-for="IdMascota" class="form-control" asp-items="ViewBag.IdMascota"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="DocumentoCliente" class="control-label"></label>
+                <select asp-for="DocumentoCliente" class="form-control" asp-items="ViewBag.DocumentoCliente"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="NomCita" class="control-label">Nombre del servicio</label>
+                <select asp-for="NomCita" class="form-control" required>
+                    <option value=""></option>
+                    <option value="Baño y peluquería">Baño y peluquería</option>
+                    <option value="Consulta veterinaria">Consulta veterinaria</option>
+                    <option value="Vacunación">Vacunación</option>
+                    <option value="Cirugía">Cirugía</option>
+                    <option value="Odontología veterinaria">Odontología veterinaria</option>
+                    <option value="Exámenes de laboratorio">Exámenes de laboratorio</option>
+                    <option value="Hospitalización">Hospitalización</option>
+                    <option value="Terapia física">Terapia física</option>
+                    <option value="Paseos y ejercicio">Paseos y ejercicio</option>
+                    <option value="Estética y belleza">Estética y belleza</option>
+                    <option value="Masajes terapéuticos">Masajes terapéuticos</option>
+                    <option value="Servicio de transporte de mascotas">Servicio de transporte de mascotas</option>
+                    <option value=""></option>
+                </select>
+                <span asp-validation-for="NomCita" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FechaHora" class="control-label">Fecha y Hora</label>
+                <input asp-for="FechaHora" class="form-control" required />
+                <span asp-validation-for="FechaHora" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Estado" class="control-label">Estado</label>
+                <input asp-for="Estado" class="form-control" readonly value="Pendiente" />
+                <span asp-validation-for="Estado" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Precio" class="control-label">Precio</label>
+                <input asp-for="Precio" class="form-control" required />
+                <span asp-validation-for="Precio" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group text-center">
+                <button type="submit" class="btn btn-primary">Crear</button>
+                <a asp-action="Index" class="btn btn-secondary">Volver</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+
+
+
+ @model EntreEspeciesNuevo.models.CitaInterna
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Create</h1>
+
+<h4>CitaInterna</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="IdMascota" class="control-label"></label>
+                <select asp-for="IdMascota" class ="form-control" asp-items="ViewBag.IdMascota"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="DocumentoCliente" class="control-label"></label>
+                <select asp-for="DocumentoCliente" class ="form-control" asp-items="ViewBag.DocumentoCliente"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="NomCita" class="control-label"></label>
+                <input asp-for="NomCita" class="form-control" />
+                <span asp-validation-for="NomCita" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FechaHora" class="control-label"></label>
+                <input asp-for="FechaHora" class="form-control" />
+                <span asp-validation-for="FechaHora" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Estado" class="control-label"></label>
+                <input asp-for="Estado" class="form-control" />
+                <span asp-validation-for="Estado" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Precio" class="control-label"></label>
+                <input asp-for="Precio" class="form-control" />
+                <span asp-validation-for="Precio" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+ *@

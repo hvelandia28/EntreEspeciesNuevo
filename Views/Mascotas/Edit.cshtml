@@ -1,0 +1,78 @@
+﻿@model EntreEspeciesNuevo.Models.Mascota
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    body{
+        display: flex;
+    }
+</style>
+<h1>Edit</h1>
+
+<h4>Mascota</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="IdMascota" disabled />
+            <p>Datos del Cliente</p>
+            <div class="form-group">
+                <label asp-for="DocumentoCliente" class="control-label">Documento del Cliente</label>
+                <select asp-for="DocumentoCliente" class="form-control" asp-items="ViewBag.DocumentoCliente" disabled></select>
+                <span asp-validation-for="DocumentoCliente" class="text-danger"></span>
+            </div>
+            <p>Datos de la Mascota</p>
+
+            <div class="form-group">
+                <label asp-for="NombreMascota" class="control-label">Nombre</label>
+                <input asp-for="NombreMascota" class="form-control" />
+                <span asp-validation-for="NombreMascota" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FechaNacimiento" class="control-label">Fecha Nacimiento</label>
+                <input asp-for="FechaNacimiento" class="form-control" disabled/>
+                <span asp-validation-for="FechaNacimiento" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ColorMascota" class="control-label">Color</label>
+                <input asp-for="ColorMascota" class="form-control" />
+                <span asp-validation-for="ColorMascota" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Especie" class="control-label"></label>
+                <input asp-for="Especie" class="form-control" disabled/>
+                <span asp-validation-for="Especie" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Raza" class="control-label"></label>
+                <input asp-for="Raza" class="form-control" />
+                <span asp-validation-for="Raza" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Genero" class="control-label"></label>
+                <input asp-for="Genero" class="form-control" disabled/>
+                <span asp-validation-for="Genero" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="InfMascota" class="control-label">Descripción Breve</label>
+                <input asp-for="InfMascota" class="form-control" />
+                <span asp-validation-for="InfMascota" class="text-danger"></span>
+            </div>
+            <center>
+                <div class="form-group">
+                    <input type="submit" value="Guardar" class="btn btn-primary" />
+                </div>
+                <div class="form-group">
+                    <a asp-action="Index">Cancelar</a>
+                </div>
+            </center>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

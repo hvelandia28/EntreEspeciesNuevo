@@ -1,0 +1,283 @@
+﻿@model EntreEspeciesNuevo.Models.DetaVentum
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<head>
+    <!-- Otros elementos del head -->
+    <!-- Agrega el script de SweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+</head>
+<style>
+    body {
+        display:flex;
+        background-image: url('/images/fondo.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    .container {
+        margin-top: 50px;
+    }
+
+    .form-container {
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 20px;
+        border: 2px solid #007BFF;
+        border-radius: 10px;
+        margin-right: 20px;
+        max-width: 400px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-control {
+        width: 100%;
+    }
+
+    .btn-primary {
+        background-color: #007BFF;
+        border-color: #007BFF;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        color: #fff;
+    }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+            color: #fff;
+        }
+
+    .center-btn {
+        text-align: center;
+    }
+
+    table {
+        width: 100%;
+        margin-top: 20px;
+        border-collapse: collapse;
+        border-spacing: 0;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    th, td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #007BFF;
+        color: #fff;
+    }
+
+    tbody tr:hover {
+        background-color: #f5f5f5;
+    }
+
+    .table-container {
+        margin-top: 20px;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <!-- Formulario -->
+            <div class="form-container">
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <input type="hidden" asp-for="IdVenta" value="@ViewData["VentaId"]" />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="IdServicio" class="control-label"></label>
+                        <select asp-for="IdServicio" class="form-control" asp-items="ViewBag.IdServicio">
+                            <option value="">Seleccionar Servicio</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="IdProducto" class="control-label"></label>
+                        <select asp-for="IdProducto" class="form-control" asp-items="ViewBag.ProductosConDisponibilidad">
+                            <option value="">Seleccionar Producto</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Cantidad" class="control-label"></label>
+                        <input asp-for="Cantidad" class="form-control" id="Cantidad" />
+                        <span asp-validation-for="Cantidad" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="SubTotalPro" class="control-label">Subtotal del Producto</label>
+                        <input asp-for="SubTotalPro" class="form-control" readonly id="SubTotalPro" />
+                        <span asp-validation-for="SubTotalPro" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="SubTotalSer" class="control-label">Precio del Servicio</label>
+                        <input asp-for="SubTotalSer" class="form-control" readonly />
+                        <span asp-validation-for="SubTotalSer" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" name="action" value="Finalizar" class="btn btn-primary" />
+                        <input type="submit" name="action" value="RegistrarOtra" class="btn btn-secondary" />
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-6 table-container">
+            <!-- Tabla DetaVentum -->
+            @if (ViewBag.DetallesAnteriores != null && ViewBag.DetallesAnteriores.Count > 0)
+            {
+                <h5>Detalles Anteriores:</h5>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Servicio</th>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>SubTotalPro</th>
+                            <th>SubTotalSer</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var detalleAnterior in ViewBag.DetallesAnteriores)
+                        {
+                            <tr>
+                                <td>
+                                    @if (detalleAnterior.IdServicioNavigation != null)
+                                    {
+                                        @detalleAnterior.IdServicioNavigation.NomServico
+                                    }
+                                    else
+                                    {
+                                        <text>No seleccionaste nada</text>
+                                    }
+                                </td>
+                                <td>@detalleAnterior.IdProductoNavigation?.NomProducto</td>
+                                <td>@detalleAnterior.Cantidad</td>
+                                <td>@detalleAnterior.SubTotalPro</td>
+                                <td>@detalleAnterior.SubTotalSer</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script>
+        $(document).ready(function () {
+            $('form').submit(function (event) {
+                // Verificar si se ha seleccionado al menos un servicio o un producto
+                if (!$('#IdServicio').val() && !$('#IdProducto').val()) {
+                    // Mostrar SweetAlert en lugar de la alerta por defecto
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Debes seleccionar al menos un servicio o un producto.'
+                    });
+
+                    event.preventDefault(); // Evitar que el formulario se envíe
+                }
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            var productId;
+
+            $('#IdProducto').change(function () {
+                productId = $(this).val();
+                if (productId) {
+                    $.ajax({
+                        url: '/Productoes/GetPrecioProducto?productId=' + productId,
+                        type: 'GET',
+                        success: function (data) {
+                            $('#PrecioDisplay').text(data);
+                            actualizarSubTotal();
+                        },
+                        error: function () {
+                            // Manejar errores si es necesario
+                        }
+                    });
+                }
+            });
+
+            $('#Cantidad').on('input', function () {
+                $.ajax({
+                    url: '/Productoes/GetCantidad?productId=' + productId,
+                    type: 'GET',
+                    success: function (data) {
+                        var cantidad = parseFloat($('#Cantidad').val());
+                        if (!isNaN(cantidad) && cantidad > data) {
+                            alert('¡No hay suficientes unidades disponibles!');
+                            $('#Cantidad').val('');
+                        } else {
+                            actualizarSubTotal();
+                        }
+                    },
+                    error: function () {
+                        // Manejar errores si es necesario
+                    }
+                });
+            });
+
+            $('#IdProducto').after('<div>Precio: <span id="PrecioDisplay"></span></div>');
+
+            $('#Cantidad').on('input', function () {
+                actualizarSubTotal();
+            });
+        });
+
+        function actualizarSubTotal() {
+            var precio = parseFloat($('#PrecioDisplay').text());
+            var cantidad = parseFloat($('#Cantidad').val());
+
+            if (!isNaN(precio) && !isNaN(cantidad)) {
+                var subTotalPro = precio * cantidad;
+                var subTotalProSinDecimales = Math.round(subTotalPro);
+                $('#SubTotalPro').val(subTotalProSinDecimales);
+            } else {
+                $('#SubTotalPro').val('');
+            }
+        }
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $("#IdServicio").change(function () {
+                var selectedServicioId = $(this).val();
+                if (selectedServicioId) {
+                    $.ajax({
+                        url: "/Servicios/GetPrecioProducto",
+                        type: "GET",
+                        data: { servicioId: selectedServicioId },
+                        success: function (result) {
+                            $("#SubTotalSer").val(result);
+                        },
+                        error: function (error) {
+                            console.error("Error al obtener el precio del servicio: ", error);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}

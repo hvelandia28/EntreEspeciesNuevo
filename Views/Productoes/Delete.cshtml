@@ -1,0 +1,128 @@
+﻿@model EntreEspeciesNuevo.Models.Producto
+
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    /* Estilos generales */
+    body {
+        background-color: #f0f8ff; /* Azul claro */
+        color: #333; /* Color de texto principal */
+    }
+
+    h1 {
+        color: #4169e1; /* Azul real */
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    /* Estilos para la sección de eliminación de producto */
+    .delete-section {
+        margin: auto;
+        max-width: 600px;
+        padding: 20px;
+        border: 1px solid #ddd; /* Borde gris claro */
+        border-radius: 5px;
+        background-color: #fff;
+    }
+
+        .delete-section h4 {
+            color: #4169e1; /* Azul real */
+            text-align: center;
+        }
+
+    /* Estilos para los detalles del producto a eliminar */
+    .col-sm-2 {
+        margin-bottom: 1rem;
+    }
+
+    .col-sm-10 {
+        margin-bottom: 1rem;
+    }
+
+    /* Botones y enlaces */
+    .btn-danger {
+        background-color: #dc3545; /* Rojo */
+        color: #fff;
+        border: 1px solid #dc3545;
+        padding: 8px 16px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 14px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+        .btn-danger:hover {
+            background-color: #c82333; /* Rojo oscuro */
+            border: 1px solid #c82333;
+        }
+
+    a {
+        color: #4169e1; /* Azul real */
+        text-decoration: none;
+        font-weight: bold;
+        margin-right: 10px;
+        display: inline-block;
+        text-align: center;
+        margin-top: 10px;
+    }
+
+        a:hover {
+            text-decoration: underline;
+        }
+</style>
+
+<h1>ELIMINAR PRODUCTO</h1>
+
+<div class="delete-section">
+    <h4>¿ESTÁS SEGURO QUE QUIERES ELIMINAR EL PRODUCTO?</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-10">
+            @Html.DisplayNameFor(model => model.NomProducto)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.NomProducto)
+        </dd>
+        <dt class="col-sm-10">
+            @Html.DisplayNameFor(model => model.Disponibilidad)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Disponibilidad)
+        </dd>
+        <!-- Agrega más detalles si es necesario -->
+    </dl>
+
+    <form asp-action="Delete" id="deleteForm">
+        <input type="hidden" asp-for="IdProducto" />
+        <button type="button" class="btn btn-danger" onclick="confirmDelete()">ELIMINAR</button> |
+        <a asp-action="Index">CANCELAR</a>
+    </form>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    <script>
+        function confirmDelete() {
+            Swal.fire({
+                title: '¿DESEAS CONFIRMAR?',
+                text: 'No podrás revertir esto.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545', /* Rojo */
+                cancelButtonColor: '#6c757d', /* Gris oscuro */
+                confirmButtonText: 'CONFIRMAR'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Enviar el formulario si el usuario confirma
+                    document.getElementById("deleteForm").submit();
+                }
+            });
+        }
+    </script>
+}

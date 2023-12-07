@@ -1,0 +1,114 @@
+﻿@model EntreEspeciesNuevo.Models.Cliente
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    /* Estilos generales */
+    body {
+        display:flex;
+        background-color: #f0f8ff; /* Azul claro */
+        color: #333; /* Color de texto principal */
+    }
+
+    h1 {
+        color: #4169e1; /* Azul real */
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    /* Estilos para la sección de detalles de cliente */
+    .details-section {
+        margin: auto;
+        max-width: 600px;
+        padding: 20px;
+        border: 1px solid #ddd; /* Borde gris claro */
+        border-radius: 5px;
+        background-color: #fff;
+    }
+
+        .details-section h4 {
+            color: #4169e1; /* Azul real */
+            text-align: center;
+        }
+
+    /* Estilos para los detalles del cliente */
+    .col-sm-2 {
+        margin-bottom: 1rem;
+        font-weight: bold;
+    }
+
+    .col-sm-10 {
+        margin-bottom: 1rem;
+    }
+
+    /* Enlaces de acción */
+    a {
+        color: #4169e1; /* Azul real */
+        text-decoration: none;
+        font-weight: bold;
+        margin-right: 10px;
+        display: block;
+        text-align: center;
+        margin-top: 10px;
+    }
+
+        a:hover {
+            text-decoration: underline;
+        }
+</style>
+
+<h1>DETALLES</h1>
+
+<div class="details-section">
+    <h4>Cliente</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            Tipo Documento
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TipoDocu)
+        </dd>
+        <dt class="col-sm-2">
+            N° Documento
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DocumentoCliente)
+        </dd>
+        <dt class="col-sm-2">
+            Nombre
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.NombreCliente)
+        </dd>
+        <dt class="col-sm-2">
+            Dirección
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Direccion)
+        </dd>
+        <dt class="col-sm-2">
+            Teléfono
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Telefono)
+        </dd>
+        <dt class="col-sm-2">
+            Correo
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Correo)
+        </dd>
+        <center>
+            <div class="text-center">
+                <a asp-action="Edit" asp-route-id="@Model?.DocumentoCliente">Editar</a>
+                <a asp-action="Index">Regresar</a>
+            </div>
+        </center>
+
+    </dl>
+</div>
+

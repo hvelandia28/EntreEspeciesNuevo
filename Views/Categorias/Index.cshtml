@@ -1,0 +1,195 @@
+﻿@using X.PagedList.Mvc.Core;
+@model X.PagedList.IPagedList<EntreEspeciesNuevo.Models.Categoria>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    body {
+        display:flex;
+        background-image: url('/images/fondo.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    .input-group {
+        width: 350px;
+    }
+
+    .pagination-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .pagination {
+        display: flex;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+        .pagination li {
+            margin-right: 5px;
+        }
+
+        .pagination a {
+            display: block;
+            padding: 8px 12px;
+            text-decoration: none;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            color: #333;
+            transition: background-color 0.3s;
+        }
+
+            .pagination a:hover {
+                background-color: #ddd;
+            }
+
+        .pagination .PagedList-selPage {
+            background-color: #007bff;
+            color: #fff;
+            border: 1px solid #007bff;
+        }
+   /*  .btn-actions {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+        .btn-actions a {
+            margin-right: 5px; /* Ajusta el margen entre los botones */
+            font-size: 12px; /* Ajusta el tamaño de la fuente de los botones */
+        } */
+
+   
+</style>
+@{
+    var RegistrarCategorias = ViewBag.RegistrarCategorias;
+    var ActualizarCategorias = ViewBag.ActualizarCategorias;
+    var CambioEstadoCategorias = ViewBag.CambioEstadoCategorias;
+}
+<h1 class ="display-4">Categorias</h1>
+@if (RegistrarCategorias)
+{
+    <p>
+        <a class="btn btn-primary" asp-action="Create">Crear Categoria</a>
+    </p>
+}
+
+<div class="d-flex justify-content-between align-items-center">
+    <div class="input-group mb-3 mr-2">
+        <input type="text" id="searchInput" placeholder="Buscar nombre..." class="form-control form-control-sm">
+        <button id="searchButton" class="btn btn-primary">Buscar</button>
+    </div>
+</div>
+
+<table class="table table-striped">
+        <thead>
+            <tr>
+                <th>
+                    Nombre de la Categoria
+                </th>
+            <th >Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NomCategoria)
+                    </td>
+                <td >
+                    @if (ActualizarCategorias)
+                    {
+                        <a class="btn btn-primary btn-sm" asp-action="Edit" asp-route-id="@item.IdCategoria">
+                            <span class="fi fi-rr-edit"></span> Editar
+                        </a>
+                    }
+                    
+                    <button class="btn btn-success btn-sm detalle-btn"
+                            data-categoria-id="@item.IdCategoria"
+                            data-nom-categoria="@item.NomCategoria">
+                        <i class="fi fi-rr-search"></i> Detalle
+                    </button>
+                    @if (CambioEstadoCategorias)
+                    {
+                        <a class="btn btn-warning btn-sm" asp-action="Delete" asp-route-id="@item.IdCategoria">
+                            Cambio de estado
+                        </a>
+                    }
+                    
+                </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+<div class="pagination-container">
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+</div>
+<div class="modal fade" id="detalleModal" tabindex="-1" role="dialog" aria-labelledby="detalleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detalleModalLabel">Detalles de la Categoría</h5>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+            <div class="modal-body">
+                <!-- Aquí puedes mostrar la información detallada de la categoría -->
+                <div id="detalleContent"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchInput = document.getElementById('searchInput');
+            const searchButton = document.getElementById('searchButton');
+            const table = document.querySelector('.table tbody');
+
+            searchButton.addEventListener('click', function () {
+                const searchTerm = searchInput.value.toLowerCase();
+
+                Array.from(table.rows).forEach(function (row) {
+                    const categoriaCell = row.cells[0].textContent.toLowerCase();
+
+                    if (categoriaCell.includes(searchTerm)) {
+                        row.style.display = 'table-row';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const detalleButtons = document.querySelectorAll('.detalle-btn');
+
+            detalleButtons.forEach(function (button) {
+                button.addEventListener('click', function () {
+                    const categoriaId = button.getAttribute('data-categoria-id');
+                    const nomCategoria = button.getAttribute('data-nom-categoria');
+
+                    // Puedes hacer una solicitud AJAX para obtener los detalles de la categoría
+                    // Por ahora, simplemente mostraremos los datos en el modal
+                    const detalleContent = `
+                            <p>ID de Categoría: ${categoriaId}</p>
+                            <p>Nombre de la Categoría: ${nomCategoria}</p>
+                            <!-- Agrega más campos según sea necesario -->
+                        `;
+
+                    document.getElementById('detalleContent').innerHTML = detalleContent;
+
+                    // Muestra el modal
+                    $('#detalleModal').modal('show');
+                });
+            });
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+}

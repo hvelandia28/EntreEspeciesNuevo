@@ -1,0 +1,82 @@
+﻿@model EntreEspeciesNuevo.Models.Permiso
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Edit</h1>
+
+<h4>Permiso</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" id="form">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="IdPermiso" />
+            <div class="form-group">
+                <label asp-for="NomPermiso" class="control-label">Nombre del Permiso</label>
+                <input asp-for="NomPermiso" class="form-control" oninput="validateNomPermiso(event)" />
+                <span asp-validation-for="NomPermiso" class="text-danger"></span>
+            </div>
+            <center>
+                <div class="form-group">
+                    <input type="submit" value="Guardar" class="btn btn-primary" />
+                </div>
+                <div class="form-group">
+                    <a asp-action="Index">Cancelar</a>
+                </div>
+            </center>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        $("#form").submit(function () {
+            if (!validarCampo('NomPermiso', 'Debe Ingresar Un Nombre')) return false;
+
+            // Mostrar ventana de confirmación
+            mostrarAlerta();
+            return true; // Evitar el envío del formulario
+        });
+
+
+        function validarCampo(nombreCampo, mensaje) {
+            if ($("[name='" + nombreCampo + "']").val().trim().length < 1) {
+                mostrarAlertaWarning(mensaje);
+                return false;
+            }
+            return true;
+        }
+
+        function mostrarAlertaWarning(mensaje) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Por Favor Llene Los Campos',
+                text: mensaje,
+                footer: 'Sistema de Información'
+            });
+        }
+        function validateNomPermiso(event) {
+            const inputValue = event.target.value;
+
+            if (/[^a-zA-Z\s]/.test(inputValue)) {
+                event.target.value = inputValue.replace(/[^a-zA-Z\s]/g, '');
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Carácter inválido',
+                    text: 'Solo se permite ingresar letras',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+        }
+    </script>
+}

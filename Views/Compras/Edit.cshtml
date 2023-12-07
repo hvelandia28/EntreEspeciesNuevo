@@ -1,0 +1,98 @@
+﻿@model EntreEspeciesNuevo.Models.Compra
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    /* Estilos generales */
+    body {
+        background-color: #f0f8ff; /* Azul claro */
+        color: #333; /* Color de texto principal */
+    }
+
+    h1 {
+        color: #4169e1; /* Azul real */
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    /* Estilos para la sección de edición de compra */
+    .edit-section {
+        margin: auto;
+        max-width: 400px;
+        padding: 20px;
+        border: 1px solid #ddd; /* Borde gris claro */
+        border-radius: 5px;
+        background-color: #fff;
+    }
+
+        .edit-section h4 {
+            color: #4169e1; /* Azul real */
+            text-align: center;
+        }
+
+    /* Estilos para el formulario de edición */
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    /* Enlace de acción */
+    a {
+        color: #4169e1; /* Azul real */
+        text-decoration: none;
+        font-weight: bold;
+        margin-right: 10px;
+        display: block;
+        text-align: center;
+        margin-top: 10px;
+    }
+
+        a:hover {
+            text-decoration: underline;
+        }
+</style>
+
+<h1>EDITAR COMPRA</h1>
+
+<div class="edit-section">
+    <hr />
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="IdCompra" />
+                <div class="form-group">
+                    <label asp-for="FechaCompra" class="control-label">Fecha de la Compra</label>
+                    <input asp-for="FechaCompra" class="form-control" />
+                    <span asp-validation-for="FechaCompra" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="FormaPago" class="control-label">Forma de Pago</label>
+                    <select asp-for="FormaPago" class="form-control">
+                        <option value="Efectivo">Efectivo</option>
+                        <option value="Tarjetas de débito y crédito">Tarjetas de débito y crédito</option>
+                        <option value="Transferencias bancarias">Transferencias bancarias</option>
+                        <option value="Cheques">Cheques</option>
+                    </select>
+                    <span asp-validation-for="FormaPago" class="text-danger"></span>
+                </div>
+                <center>
+                    <div class="form-group">
+                        <input type="submit" value="Guardar" class="btn btn-primary" />
+                    </div>
+                    <div class="form-group">
+                        <a asp-action="Index">Cancelar</a>
+                    </div>
+                </center>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

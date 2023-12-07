@@ -1,0 +1,54 @@
+﻿@model EntreEspeciesNuevo.Models.Configuracion
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    body{
+        display:flex;
+    }
+</style>
+<h1>Edit</h1>
+
+<h4>Configuracion</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div class="form-group">
+                <label asp-for="IdPermiso" class="control-label"></label>
+                @if (ViewData["Permisos"] is List<Permiso> permisos && ViewData["ConfiguracionExistente"] is List<Configuracion> configuracionExistente && ViewData["RolId"] is int rolId)
+                {
+                    <form asp-action="Edit" method="post">
+                        <input type="hidden" name="rolId" value="@rolId" />
+                        @foreach (var permiso in permisos)
+                        {
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="selectedPermisos" value="@permiso.IdPermiso" @(configuracionExistente.Any(c => c.IdPermiso == permiso.IdPermiso) ? "checked" : "") />
+                                    @permiso.NomPermiso
+                                </label>
+                            </div>
+                        }
+                        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                    </form>
+                }
+                else
+                {
+                    <p>No hay permisos disponibles.</p>
+                }
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-controller="Roles" asp-action="Index">Regresar</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

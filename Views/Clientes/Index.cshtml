@@ -1,0 +1,295 @@
+﻿@model X.PagedList.IPagedList<EntreEspeciesNuevo.Models.Cliente>
+@using X.PagedList.Mvc
+@using X.PagedList.Mvc.Common;
+@using X.PagedList.Web.Common;
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    body {
+        display:flex;
+        background-image: url('/images/fondo.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    .table-container {
+        margin: 20px;
+        padding: 20px;
+        background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco semi-transparente */
+        border: 2px solid #000000;
+        border-radius: 10px;
+    }
+
+        /* Estilo específico para los botones de la tabla */
+        .table-container a.btn {
+            margin-right: 5px;
+        }
+</style>
+
+@{
+    var RegistrarClientes = ViewBag.RegistrarClientes;
+    var EditarClientes = ViewBag.EditarClientes;
+    var CambioEstadoClientes = ViewBag.CambioEstadoClientes;
+    <h1>Index</h1>
+}
+
+@if (RegistrarClientes)
+{
+    <p>
+        <a class="btn btn-primary" asp-action="Create">AGREGAR CLIENTES</a>
+    </p>
+}
+
+<div class="table-container">
+
+    @* Barra de búsqueda *@
+    <div class="form-group">
+        <label for="searchTerm">Buscar:</label>
+        <input type="text" id="searchTerm" class="form-control" />
+        <button id="btnSearch" class="btn btn-primary">Buscar</button>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    N° Documento
+                </th>
+                <th>
+                    Nombre
+                </th>
+                <th>
+                    Dirección
+                </th>
+                <th>
+                    Teléfono
+                </th>
+                <th>
+                    Correo
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DocumentoCliente)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NombreCliente)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Direccion)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Telefono)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Correo)
+                    </td>
+                    <td>
+                        @if (EditarClientes)
+                        {
+                            <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.DocumentoCliente">Editar</a>
+                        }
+                        @if (CambioEstadoClientes)
+                        {
+                            <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.DocumentoCliente">Cambio de Estado</a>
+                        }
+                        <a class="btn btn-success" asp-action="Details" asp-route-id="@item.DocumentoCliente">Detalle</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Manejar clic en el botón de búsqueda
+            $("#btnSearch").click(function () {
+                var searchTerm = $("#searchTerm").val().toLowerCase();
+
+                // Ocultar todos los elementos de la tabla
+                $("table tbody tr").hide();
+
+                // Mostrar solo las filas que coincidan con el término de búsqueda
+                $("table tbody tr").each(function () {
+                    var rowText = $(this).text().toLowerCase();
+                    if (rowText.includes(searchTerm)) {
+                        $(this).show();
+                    }
+                });
+            });
+        });
+    </script>
+</div>
+<div class="pagination-container">
+    Página @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) de @Model.PageCount.
+    Mostrando @(Model.PageCount < Model.PageNumber ? 0 : Model.FirstItemOnPage)
+    a @(Model.PageCount < Model.PageNumber ? 0 : Model.LastItemOnPage)
+    de un total de @Model.TotalItemCount elementos.
+
+    <ul class="pagination">
+        @if (Model.HasPreviousPage)
+        {
+            <li class="page-item"><a class="page-link" href="@Url.Action("Index", new { page = Model.PageNumber - 1 })">«</a></li>
+        }
+        else
+        {
+            <li class="page-item disabled"><span class="page-link">«</span></li>
+        }
+
+        @for (var i = 1; i <= Model.PageCount; i++)
+        {
+            <li class="page-item @(i == Model.PageNumber ? "active" : "")"><a class="page-link" href="@Url.Action("Index", new { page = i })">@i</a></li>
+        }
+
+        @if (Model.HasNextPage)
+        {
+            <li class="page-item"><a class="page-link" href="@Url.Action("Index", new { page = Model.PageNumber + 1 })">»</a></li>
+        }
+        else
+        {
+            <li class="page-item disabled"><span class="page-link">»</span></li>
+        }
+    </ul>
+</div>
+
+
+
+
+
+
+@* @model IEnumerable<EntreEspeciesNuevo.Models.Cliente>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    body {
+        background-image: url('/images/fondo.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    .table-container {
+        margin: 20px;
+        padding: 20px;
+        background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco semi-transparente */
+        border: 2px solid #000000;
+        border-radius: 10px;
+    }
+
+        /* Estilo específico para los botones de la tabla */
+        .table-container a.btn {
+            margin-right: 5px;
+        }
+</style>
+@{
+    var RegistrarClientes = ViewBag.RegistrarClientes;
+    var EditarClientes = ViewBag.EditarClientes; 
+    var CambioEstadoClientes = ViewBag.CambioEstadoClientes;
+    <h1>Index</h1>
+}
+    @if (RegistrarClientes) 
+    {
+<p>
+    <a class="btn btn-primary" asp-action="Create">AGREGAR CLIENTES</a>
+</p>
+    }
+<div class="table-container">
+
+    @* Barra de busqueda 
+    <div class="form-group">
+        <label for="searchTerm">Buscar:</label>
+        <input type="text" id="searchTerm" class="form-control" />
+        <button id="btnSearch" class="btn btn-primary">Buscar</button>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Manejar clic en el botón de búsqueda
+            $("#btnSearch").click(function () {
+                var searchTerm = $("#searchTerm").val().toLowerCase();
+
+                // Ocultar todos los elementos de la tabla
+                $("table tbody tr").hide();
+
+                // Mostrar solo las filas que coincidan con el término de búsqueda
+                $("table tbody tr").each(function () {
+                    var rowText = $(this).text().toLowerCase();
+                    if (rowText.includes(searchTerm)) {
+                        $(this).show();
+                    }
+                });
+            });
+        });
+    </script>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    N° Documento
+                </th>
+                <th>
+                    Nombre
+                </th>
+                <th>
+                    Dirección
+                </th>
+                <th>
+                    Teléfono
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Correo)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DocumentoCliente)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NombreCliente)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Direccion)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Telefono)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Correo)
+                    </td>
+                    <td>
+                    @if (EditarClientes)
+                    {
+                        <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.DocumentoCliente">Editar</a>
+                    }
+                    @if (CambioEstadoClientes)
+                    {
+                            <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.DocumentoCliente">Cambio de Estado</a>
+                    }
+                        <a class="btn btn-success" asp-action="Details" asp-route-id="@item.DocumentoCliente">Detalle</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+ *@

@@ -1,0 +1,77 @@
+﻿@model EntreEspeciesNuevo.Models.Mascota
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    body{
+        display: flex;
+    }
+    
+</style>
+<h1>Details</h1>
+
+<div>
+    <h4>Mascota</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            Nombre
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NombreMascota)
+        </dd>
+        <dt class = "col-sm-2">
+            Fecha Nacimiento
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FechaNacimiento)
+        </dd>
+        <dt class = "col-sm-2">
+            Color
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ColorMascota)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Especie)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Especie)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Raza)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Raza)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Genero)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Genero)
+        </dd>
+        <dt class = "col-sm-2">
+            Descripción Breve
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.InfMascota)
+        </dd>
+        <dt class = "col-sm-2">
+            Documento del Cliente
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DocumentoClienteNavigation.DocumentoCliente)
+        </dd>
+        <center>
+            <div> 
+                <a asp-action="Edit" asp-route-id="@Model?.IdMascota">Editar</a>
+            </div>
+            <div>
+                <a asp-action="Index">Regresar</a>
+            </div>
+        </center>
+    </dl>
+</div>
+

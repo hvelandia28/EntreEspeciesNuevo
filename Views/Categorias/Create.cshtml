@@ -1,0 +1,110 @@
+﻿@model EntreEspeciesNuevo.Models.Categoria
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    body {
+        display:flex;
+        background-image: url('/images/fondo.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    .container {
+        margin-top: 50px;
+    }
+
+    .form-container {
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 20px;
+        border: 2px solid #007BFF;
+        border-radius: 10px;
+        margin: 0 auto;
+        max-width: 400px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-control {
+        width: 100%;
+    }
+
+    .btn-primary {
+        background-color: #007BFF;
+        border-color: #007BFF;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+    .center-btn {
+        text-align: center;
+    }
+</style>
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-md-4 form-container">
+            <h1 >Crear Categoria</h1>
+            <hr />
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="NomCategoria" class="control-label">Nombre de la Categoria</label>
+                    <input asp-for="NomCategoria" class="form-control" />
+                    <span asp-validation-for="NomCategoria" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="CREAR" class="btn btn-primary" />
+                </div>
+                <a asp-action="Index" class="btn btn-cancel">CANCELAR</a>
+            </form>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.querySelector('form');
+            form.addEventListener('submit', function (event) {
+                const nomCategoriaInput = document.getElementById('NomCategoria');
+                const nomCategoriaValue = nomCategoriaInput.value.trim(); // Trim para eliminar espacios en blanco al inicio y al final
+
+                if (nomCategoriaValue === '') {
+                    event.preventDefault(); // Evitar el envío del formulario
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Por favor, ingrese un nombre de categoría antes de crear.'
+                    });
+                } else {
+                    // Aquí puedes hacer una petición AJAX para enviar el formulario al servidor si es necesario
+                    // Por ahora, mostraremos una alerta de éxito
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Éxito',
+                        text: 'La categoría se ha creado exitosamente.',
+                        timer: 7000
+                    });
+                }
+            });
+        });
+    </script>
+}
+
+
+
+

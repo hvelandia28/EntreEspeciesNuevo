@@ -1,0 +1,68 @@
+﻿@model EntreEspeciesNuevo.Models.Categoria
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+
+    body {
+        background-color: #f0f8ff;
+        color: #333;
+    }
+
+    h1 {
+        color: #4169e1;
+    }
+
+
+    .details-section {
+        margin-top: 20px;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #fff;
+    }
+
+        .details-section h4 {
+            color: #4169e1;
+        }
+
+
+    .col-sm-2,
+    .col-sm-10 {
+        margin-bottom: 1rem;
+    }
+
+
+    a {
+        color: #4169e1;
+        text-decoration: none;
+        font-weight: bold;
+        margin-right: 10px;
+    }
+
+        a:hover {
+            text-decoration: underline;
+        }
+</style>
+
+<h1>CATEGORIA</h1>
+
+<div class="details-section">
+    <h4>Categoria</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.NomCategoria)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.NomCategoria)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.IdCategoria">EDITAR</a> |
+    <a asp-action="Index">REGRESAR</a>
+</div>

@@ -1,0 +1,137 @@
+﻿@model EntreEspeciesNuevo.Models.DetalleCitaViewModel
+
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+
+    body {
+        display:flex;
+        background-image: url('/images/fondo.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+</style>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="card-title">Detalles de la Cita</h4>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-4">Nombre de la Cita:</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.CitaInterna.NomCita)</dd>
+
+                        <dt class="col-sm-4">Fecha y Hora:</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.CitaInterna.FechaHora)</dd>
+
+                        <dt class="col-sm-4">Estado:</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.CitaInterna.Estado)</dd>
+
+                        <dt class="col-sm-4">Precio:</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.CitaInterna.Precio)</dd>
+
+
+
+                        <dt class="col-sm-4">Documento del Cliente:</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Cliente.DocumentoCliente)</dd>
+
+                        <dt class="col-sm-4">Nombre del Cliente:</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Cliente.NombreCliente)</dd>
+                        <!-- Agrega otros campos de cliente aquí -->
+
+
+
+                        <dt class="col-sm-4">Nombre de la Mascota:</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Mascota.NombreMascota)</dd>
+
+                        <dt class="col-sm-4">Fecha de Nacimiento:</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Mascota.FechaNacimiento)</dd>
+
+                        <dt class="col-sm-4">Especie:</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Mascota.Especie)</dd>
+
+                        <dt class="col-sm-4">Raza:</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Mascota.Raza)</dd>
+
+                        <dt class="col-sm-4">Género:</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Mascota.Genero)</dd>
+
+                        <dt class="col-sm-4">Información de la Mascota:</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Mascota.InfMascota)</dd>
+                        <!-- Agrega otros campos de mascota aquí -->
+                    </dl>
+                    <div class="container mt-4 text-center">
+                        <a asp-action="Index" class="btn btn-secondary">Volver</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+@* @model EntreEspeciesNuevo.models.CitaInterna
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>CitaInterna</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.NomCita)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NomCita)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FechaHora)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FechaHora)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Estado)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Estado)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Precio)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Precio)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.DocumentoClienteNavigation)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DocumentoClienteNavigation.DocumentoCliente)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.IdMascotaNavigation)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.IdMascotaNavigation.IdMascota)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.IdCitaInt">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
+ *@

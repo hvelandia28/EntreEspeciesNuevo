@@ -1,0 +1,72 @@
+﻿@model EntreEspeciesNuevo.Models.AccesoViewModels.OlvidoContraseñaViewModel
+<style>
+    body {
+        background-image: url('/images/fondo.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    .container {
+        margin-top: 50px;
+    }
+
+    .form-container {
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 20px;
+        border: 2px solid #007BFF;
+        border-radius: 10px;
+        margin: 0 auto;
+        max-width: 400px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-control {
+        width: 100%;
+    }
+
+    .btn-primary {
+        background-color: #007BFF;
+        border-color: #007BFF;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+    .center-btn {
+        text-align: center;
+    }
+</style>
+@{
+    ViewData["Title"] = "Recuperar Contraseña";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container text-center mt-5">
+    <h1 class="mb-4">Recuperar Contraseña</h1>
+    <div class="row">
+        <div class="col-md-4 form-container">
+            @if (TempData["Mensaje"] != null)
+            {
+                <div class="alert alert-success">@TempData["Mensaje"]</div>
+            }
+
+            <form asp-action="OlvidoContraseña" asp-controller="Acceso" method="post">
+                @Html.AntiForgeryToken()
+
+                <div class="form-group">
+                    <label asp-for="Correo"></label>
+                    <input asp-for="Correo" class="form-control" />
+                    <span asp-validation-for="Correo" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Enviar Enlace</button>
+                <a class="btn btn-secondary" href="@Url.Action("Index", "Acceso")">Regresar</a>
+            </form>
+        </div>
+    </div>
+    
+</div>

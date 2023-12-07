@@ -1,0 +1,223 @@
+﻿@model EntreEspeciesNuevo.Models.DetaCompra
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    body {
+        display:flex;
+        background-image: url('/images/fondo.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    .container {
+        margin-top: 50px;
+    }
+
+    .form-container {
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 20px;
+        border: 2px solid #007BFF;
+        border-radius: 10px;
+        margin: 0 auto;
+        max-width: 400px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-control {
+        width: 100%;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+
+        .btn-success:hover {
+            background-color: #218838;
+            border-color: #218838;
+        }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        color: #fff;
+    }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+            color: #fff;
+        }
+
+    .center-btn {
+        text-align: center;
+    }
+
+    /* Table styling */
+    table {
+        width: 100%;
+        margin-top: 20px;
+        border-collapse: collapse;
+        border-spacing: 0;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    th, td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #007BFF;
+        color: #fff;
+    }
+
+    tbody tr:hover {
+        background-color: #f5f5f5;
+    }
+</style>
+<h1>Create</h1>
+
+<div class="container">
+    <h1>Detalle de la Compra</h1>
+    <hr />
+
+    <div class="row">
+        <div class="col-md-4 form-container">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <input type="hidden" asp-for="IdCompra" value="@ViewData["CompraId"]" />
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="IdProducto" class="control-label">Producto</label>
+                    <select asp-for="IdProducto" class="form-control" asp-items="ViewBag.ProductosConDisponibilidad">
+                        <option value="">Seleccionar Producto</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Cantidad" class="control-label"></label>
+                    <input asp-for="Cantidad" class="form-control" oninput="validateCantidad(event)" />
+                    <span asp-validation-for="Cantidad" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="PrecioCompra" class="control-label">Precio de la Compra</label>
+                    <input asp-for="PrecioCompra" class="form-control" id="PrecioCompra" />
+                    <span asp-validation-for="PrecioCompra" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="TotalDetalle" class="control-label"></label>
+                    <span asp-for="TotalDetalle" class="form-control" readonly></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Subtotal" class="control-label"></label>
+                    <input asp-for="Subtotal" class="form-control" readonly id="Subtotal" />
+                    <span asp-validation-for="Subtotal" class="text-danger"></span>
+                </div>
+
+                <div class="form-group center-btn">
+                    <button type="submit" name="submitButton" value="Finalizar" class="btn btn-success">Finalizar</button>
+                    <button type="submit" name="submitButton" value="Registrar Otra" class="btn btn-secondary">Registrar Otra</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-md-8">
+            <div class="text-right">
+                @if (ViewBag.DetallesAnteriores != null && ViewBag.DetallesAnteriores.Count > 0)
+                {
+                    <h5>Detalles Anteriores:</h5>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Precio de la compra</th>
+                                <th>Subtotal Compta</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var detalleAnterior in ViewBag.DetallesAnteriores)
+                            {
+                                <tr>
+                                    <td>@detalleAnterior.IdProductoNavigation.NomProducto</td>
+                                    <td>@detalleAnterior.Cantidad</td>
+                                    <td>@detalleAnterior.PrecioCompra</td>
+                                    <td>@detalleAnterior.Subtotal</td>
+                                    <td>
+                                        <a asp-action="Edit" asp-route-id="@detalleAnterior.IdDetaCompra">Editar</a>
+                                        <a asp-action="Delete" asp-route-id="@detalleAnterior.IdDetaCompra">Eliminar</a>
+
+                                        @*                                     <a href="javascript:void(0);" class="eliminar-detalle" data-detalle-id="@detalleAnterior.IdDetalleV">Eliminar</a>
+                                *@
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script>
+        $(document).ready(function () {
+            $('form').submit(function (event) {
+                // Validar campos antes de enviar el formulario
+                var idProducto = $('#IdProducto').val();
+                var cantidad = $('#Cantidad').val();
+                var precioCompra = $('#PrecioCompra').val();
+
+                if (!idProducto || !cantidad || !precioCompra) {
+                    // Mostrar SweetAlert si algún campo está vacío
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Todos los campos son obligatorios. Por favor, completa la información.'
+                    });
+
+                    event.preventDefault(); // Evitar que el formulario se envíe
+                } else {
+                    // Actualiza el valor de Subtotal cuando cambia el valor de PrecioCompra
+                    var precioCompraValue = parseFloat($("#PrecioCompra").val());
+                    $("#Subtotal").val(precioCompraValue);
+
+                    // Mostrar SweetAlert de éxito
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Registro exitoso!',
+                        text: 'La compra se ha registrado correctamente.'
+                    }).then(function () {
+                        // Redirigir al índice después de hacer clic en "Aceptar"
+                        window.location.href = '/Compras/Index';
+                    });
+                }
+            });
+
+            // Actualiza el valor de Subtotal cuando cambia el valor de PrecioCompra
+            $("#PrecioCompra").change(function () {
+                var precioCompra = parseFloat($(this).val());
+                $("#Subtotal").val(precioCompra);
+            });
+        });
+    </script>
+}

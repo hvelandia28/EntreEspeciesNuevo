@@ -1,0 +1,182 @@
+﻿@model X.PagedList.IPagedList<EntreEspeciesNuevo.Models.Mascota>
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Mvc.Common;
+@using X.PagedList.Web.Common;
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    var RegistrarMascotas = ViewBag.RegistrarMascotas;
+    var ActualizarMascotas = ViewBag.ActualizarMascotas;
+    var CambioEstadoMascotas = ViewBag.CambioEstadoMascotas;
+}
+<style>
+    body {
+        display:flex;
+        background-image: url('/images/fondo.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    .container {
+        margin-top: 50px;
+    }
+
+    .form-container {
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 20px;
+        border: 2px solid #007BFF;
+        border-radius: 10px;
+        margin: 0 auto;
+        max-width: 400px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-control {
+        width: 100%;
+    }
+
+    .btn-primary {
+        background-color: #007BFF;
+        border-color: #007BFF;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+    .center-btn {
+        text-align: center;
+    }
+</style>
+<h1>Mascotas</h1>
+@if (RegistrarMascotas)
+{
+    <p>
+        <a class="btn btn-primary" asp-action="Create">Crear Mascota</a>
+    </p>
+    
+}
+
+@* Barra de busqueda *@
+<div class="form-group">
+    <label for="searchTerm">Buscar:</label>
+    <input type="text" id="searchTerm" class="form-control" />
+    <button id="btnSearch" class="btn btn-primary">Buscar</button>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // Manejar clic en el botón de búsqueda
+        $("#btnSearch").click(function () {
+            var searchTerm = $("#searchTerm").val().toLowerCase();
+
+            // Ocultar todos los elementos de la tabla
+            $("table tbody tr").hide();
+
+            // Mostrar solo las filas que coincidan con el término de búsqueda
+            $("table tbody tr").each(function () {
+                var rowText = $(this).text().toLowerCase();
+                if (rowText.includes(searchTerm)) {
+                    $(this).show();
+                }
+            });
+        });
+    });
+</script>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Documento del Cliente
+            </th>
+            <th>
+                Nombre
+            </th>
+            <th>
+                Raza
+            </th>
+            <th>
+                Genero
+            </th>
+            <th>
+                Fecha Nacimiento
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.DocumentoClienteNavigation.DocumentoCliente)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NombreMascota)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Raza)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Genero)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaNacimiento)
+            </td>
+            <td>
+                    @if (ActualizarMascotas)
+                    {
+                        <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.IdMascota">Editar</a>
+
+                    }
+                    @if (CambioEstadoMascotas)
+                    {
+                        <a class="btn btn-warning" asp-action="Delete" asp-route-id="@item.IdMascota">Cambio de Estado</a>
+                        
+                    }
+
+                <a class="btn btn-info" asp-action="Details" asp-route-id="@item.IdMascota">Detalle</a> 
+                
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+<div class="pagination-container">
+    Página @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) de @Model.PageCount.
+    Mostrando @(Model.PageCount < Model.PageNumber ? 0 : Model.FirstItemOnPage)
+    a @(Model.PageCount < Model.PageNumber ? 0 : Model.LastItemOnPage)
+    de un total de @Model.TotalItemCount elementos.
+
+    <ul class="pagination">
+        @if (Model.HasPreviousPage)
+        {
+            <li class="page-item"><a class="page-link" href="@Url.Action("Index", new { page = Model.PageNumber - 1 })">«</a></li>
+        }
+        else
+        {
+            <li class="page-item disabled"><span class="page-link">«</span></li>
+        }
+
+        @for (var i = 1; i <= Model.PageCount; i++)
+        {
+            <li class="page-item @(i == Model.PageNumber ? "active" : "")"><a class="page-link" href="@Url.Action("Index", new { page = i })">@i</a></li>
+        }
+
+        @if (Model.HasNextPage)
+        {
+            <li class="page-item"><a class="page-link" href="@Url.Action("Index", new { page = Model.PageNumber + 1 })">»</a></li>
+        }
+        else
+        {
+            <li class="page-item disabled"><span class="page-link">»</span></li>
+        }
+    </ul>
+</div>

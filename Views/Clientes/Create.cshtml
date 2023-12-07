@@ -1,0 +1,448 @@
+﻿@model EntreEspeciesNuevo.Models.Cliente
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    body {
+        display:flex;
+        background-image: url('/images/fondo.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    .container {
+        margin-top: 50px;
+    }
+
+    .form-container {
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 20px;
+        border: 2px solid #007BFF;
+        border-radius: 10px;
+        margin: 0 auto;
+        max-width: 400px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-control {
+        width: 100%;
+    }
+
+    .btn-primary {
+        background-color: #007BFF;
+        border-color: #007BFF;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+    .btn-cancel {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        color: #fff;
+    }
+
+        .btn-cancel:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+            color: #fff;
+        }
+
+    .center-btn {
+        text-align: center;
+    }
+</style>
+
+<div class="container">
+    <h1>INFORMACION DEL CLIENTE</h1>
+    <hr />
+
+    <div class="row">
+        <div class="col-md-4 form-container">
+            <form asp-action="Create" id="form">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="TipoDocu" class="control-label">Tipo Documento</label>
+                    <select asp-for="TipoDocu" class="form-control">
+                        <option value="Cedula de Ciudadania">Cedula de Ciudadania</option>
+                        <option value="Cedula de extranjeria">Cedula de extranjeria</option>
+                        <option value="Pasaporte">Pasaporte</option>
+                    </select>
+                    <span asp-validation-for="TipoDocu" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DocumentoCliente" class="control-label">N° Documento</label>
+                    <input asp-for="DocumentoCliente" class="form-control" type="text" oninput="validateDocumentoCliente(event)" required pattern=".{7,10}" title="El documento debe tener entre 7 y 10 caracteres." />
+                    <span asp-validation-for="DocumentoCliente" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="NombreCliente" class="control-label">Nombre</label>
+                    <input asp-for="NombreCliente" class="form-control" oninput="validatenombre(event)" />
+                    <span asp-validation-for="NombreCliente" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Direccion" class="control-label">Dirección</label>
+                    <input asp-for="Direccion" class="form-control" />
+                    <span asp-validation-for="Direccion" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Telefono" class="control-label">Teléfono</label>
+                    <input asp-for="Telefono" class="form-control" type="text" oninput="validateTelefono(event)" />
+                    <span asp-validation-for="Telefono" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Correo" class="control-label"></label>
+                    <input asp-for="Correo" class="form-control" />
+                    <span asp-validation-for="Correo" class="text-danger"></span>
+                </div>
+                <center>
+                    <div class="form-group">
+                        <input type="submit" value="Crear" class="btn btn-primary" />
+                    </div>
+
+                    <div>
+                        <a asp-action="Index">Cencelar</a>
+                    </div>
+                </center>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        $("#form").submit(function () {
+            if (!validarCampo('DocumentoCliente', 'Debe Ingresar Un Documento')) return false;
+            if (!validarCampo('NombreCliente', 'Debe Ingresar Un Nombre')) return false;
+            if (!validarCampo('Direccion', 'Debe Ingresar Una Direccion')) return false;
+            if (!validarCampo('Telefono', 'Debe Ingresar Un Telefono')) return false;
+            if (!validarCampo('Correo', 'Debe Ingresar Un Correo')) return false;
+
+            // Mostrar ventana de confirmación
+            mostrarAlerta();
+            return true; // Evitar el envío del formulario
+        });
+
+
+        function validarCampo(nombreCampo, mensaje) {
+            if ($("[name='" + nombreCampo + "']").val().trim().length < 1) {
+                mostrarAlertaWarning(mensaje);
+                return false;
+            }
+            return true;
+        }
+
+        function mostrarAlertaWarning(mensaje) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Por Favor Llene Los Campos',
+                text: mensaje,
+                footer: 'Sistema de Información'
+            });
+        }
+
+        // function mostrarAlerta() {
+        //     Swal.fire({
+        //         icon: 'success',
+        //         title: 'Registro Exitoso',
+        //         text: 'El Cliente se registró correctamente.',
+        //         footer: 'Sistema de Información',
+        //         showConfirmButton: false
+        //     });
+
+        //     setTimeout(function () {
+        //         // window.location.href = 'Clientes';
+        //         window.location.href = '/Clientes/Index';
+
+        //     }, 3000);
+        // }
+        function validateDocumentoCliente(event) {
+            const inputValue = event.target.value;
+
+            if (isNaN(inputValue)) {
+                event.target.value = inputValue.replace(/[^\d]/g, '');
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Carácter inválido',
+                    text: 'Solo se permite ingresar números',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+        }
+        function validateTelefono(event) {
+            const inputValue = event.target.value;
+
+            if (isNaN(inputValue)) {
+                event.target.value = inputValue.replace(/[^\d]/g, '');
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Carácter inválido',
+                    text: 'Solo se permite ingresar números',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+        }
+        function validatenombre(event) {
+            const inputValue = event.target.value;
+
+            if (/[^a-zA-Z\s]/.test(inputValue)) {
+                event.target.value = inputValue.replace(/[^a-zA-Z\s]/g, '');
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Carácter inválido',
+                    text: 'Solo se permite ingresar letras',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+        }
+        function validatedocumento(event) {
+            const keyCode = event.keyCode || event.which;
+            const allowedKeys = [8, 9, 37, 39, 46]; // Teclas permitidas: retroceso, tabulación, flechas izquierda/derecha, suprimir
+            const inputValue = event.target.value;
+
+            if (!allowedKeys.includes(keyCode) && isNaN(inputValue)) {
+                // Eliminar el último carácter ingresado
+                event.target.value = event.target.value.slice(0, -1);
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Carácter inválido',
+                    text: 'Solo se permite ingresar números',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+        }
+    </script>
+}
+
+
+
+
+
+
+@* @model EntreEspeciesNuevo.Models.Cliente
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    body {
+        background-image: url('/images/fondo.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    .container {
+        margin-top: 50px;
+    }
+
+    .form-container {
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 20px;
+        border: 2px solid #007BFF;
+        border-radius: 10px;
+        margin: 0 auto;
+        max-width: 400px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-control {
+        width: 100%;
+    }
+
+    .btn-primary {
+        background-color: #007BFF;
+        border-color: #007BFF;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+    .btn-cancel {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        color: #fff;
+    }
+
+        .btn-cancel:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+            color: #fff;
+        }
+
+    .center-btn {
+        text-align: center;
+    }
+</style>
+
+<div class="container">
+    <h1>INFORMACION DEL CLIENTE</h1>
+    <hr />
+
+    <div class="row">
+        <div class="col-md-4 form-container">
+            <form asp-action="Create" id="form">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="TipoDocu" class="control-label">Tipo Documento</label>
+                    <select asp-for="TipoDocu" class="form-control">
+                        <option value="Cedula de Ciudadania">Cedula de Ciudadania</option>
+                        <option value="Cedula de extranjeria">Cedula de extranjeria</option>
+                        <option value="Pasaporte">Pasaporte</option>
+                    </select>
+                    <span asp-validation-for="TipoDocu" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DocumentoCliente" class="control-label"></label>
+                    <input asp-for="DocumentoCliente" class="form-control" required pattern=".{7,10}" title="El documento debe tener entre 7 y 10 caracteres." />
+                    <span asp-validation-for="DocumentoCliente" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="NombreCliente" class="control-label"></label>
+                    <input asp-for="NombreCliente" class="form-control" oninput="validatenombre(event)" />
+                    <span asp-validation-for="NombreCliente" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Direccion" class="control-label"></label>
+                    <input asp-for="Direccion" class="form-control" />
+                    <span asp-validation-for="Direccion" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Telefono" class="control-label"></label>
+                    <input asp-for="Telefono" class="form-control" />
+                    <span asp-validation-for="Telefono" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Correo" class="control-label"></label>
+                    <input asp-for="Correo" class="form-control" />
+                    <span asp-validation-for="Correo" class="text-danger"></span>
+                </div>
+                <center>
+                    <div class="form-group">
+                        <input type="submit" value="Crear" class="btn btn-primary" />
+                    </div>
+
+                    <div>
+                        <a asp-action="Index">Cencelar</a>
+                    </div>
+                </center>
+            </form>
+        </div>
+    </div>
+
+    @section Scripts {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+        <script>
+            $("#form").submit(function () {
+                if (!validarCampo('DocumentoCliente', 'Debe Ingresar Un Documento')) return false;
+                if (!validarCampo('NombreCliente', 'Debe Ingresar Un Nombre')) return false;
+                if (!validarCampo('Direccion', 'Debe Ingresar Una Direccion')) return false;
+                if (!validarCampo('Telefono', 'Debe Ingresar Un Telefono')) return false;
+                if (!validarCampo('Correo', 'Debe Ingresar Un Correo')) return false;
+
+                // Mostrar ventana de confirmación
+                mostrarAlerta();
+                return true; // Evitar el envío del formulario
+            });
+
+
+            function validarCampo(nombreCampo, mensaje) {
+                if ($("[name='" + nombreCampo + "']").val().trim().length < 1) {
+                    mostrarAlertaWarning(mensaje);
+                    return false;
+                }
+                return true;
+            }
+
+            function mostrarAlertaWarning(mensaje) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Por Favor Llene Los Campos',
+                    text: mensaje,
+                    footer: 'Sistema de Información'
+                });
+            }
+
+            function mostrarAlerta() {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Registro Exitoso',
+                    text: 'El Cliente se registró correctamente.',
+                    footer: 'Sistema de Información',
+                    showConfirmButton: false
+                });
+
+                setTimeout(function () {
+                    // window.location.href = 'Clientes';
+                    window.location.href = '/Clientes/Index';
+
+                }, 3000);
+            }
+            function validatenombre(event) {
+                const inputValue = event.target.value;
+
+                if (/[^a-zA-Z\s]/.test(inputValue)) {
+                    event.target.value = inputValue.replace(/[^a-zA-Z\s]/g, '');
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Carácter inválido',
+                        text: 'Solo se permite ingresar letras',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            }
+            function validatedocumento(event) {
+                const keyCode = event.keyCode || event.which;
+                const allowedKeys = [8, 9, 37, 39, 46]; // Teclas permitidas: retroceso, tabulación, flechas izquierda/derecha, suprimir
+                const inputValue = event.target.value;
+
+                if (!allowedKeys.includes(keyCode) && isNaN(inputValue)) {
+                    // Eliminar el último carácter ingresado
+                    event.target.value = event.target.value.slice(0, -1);
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Carácter inválido',
+                        text: 'Solo se permite ingresar números',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            }
+        </script>
+    }
+ *@

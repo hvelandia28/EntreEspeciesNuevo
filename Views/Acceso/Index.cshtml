@@ -1,0 +1,88 @@
+﻿@{
+    ViewData["Title"] = "Inicio de Sesión";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    body {
+        background-image: url('/images/fondo.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    .container {
+        margin-top: 50px;
+    }
+
+    .form-container {
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 20px;
+        border: 2px solid #007BFF;
+        border-radius: 10px;
+        margin: 0 auto;
+        max-width: 400px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-control {
+        width: 100%;
+    }
+
+    .btn-primary {
+        background-color: #007BFF;
+        border-color: #007BFF;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+    .center-btn {
+        text-align: center;
+    }
+</style>
+<div class="container text-center mt-5">
+    <h1 class="mb-4">Iniciar Sesión</h1>
+    @if (ViewData["ErrorMessage"] != null)
+    {
+        <p class="text-danger">@ViewData["ErrorMessage"]</p>
+    }
+    <div class="row">
+        <div class="col-md-4 form-container">
+            <form class="mb-4" method="post" asp-action="Index" asp-controller="Acceso" onsubmit="return validateForm()">
+                <div class="form-group">
+                    <label for="correo">Correo:</label>
+                    <input type="text" class="form-control" id="correo" name="correo" />
+                </div>
+                <div class="form-group">
+                    <label for="contraseña">Contraseña:</label>
+                    <input type="password" class="form-control" id="contraseña" name="contraseña" />
+                </div>
+                <button type="submit" class="btn btn-primary">Iniciar Sesión</button><br />
+                <a class="text-info" href="@Url.Action("OlvidoContraseña", "Acceso")">¿Olvidaste tu contraseña?</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function validateForm() {
+        // Verifica si los campos de correo y contraseña están vacíos y muestra SweetAlert
+        var correoIsEmpty = document.getElementById("correo").value.trim() === "";
+        var contraseñaIsEmpty = document.getElementById("contraseña").value.trim() === "";
+
+        if (correoIsEmpty || contraseñaIsEmpty) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Por favor, completa ambos campos.'
+            });
+            return false; // Evita que el formulario se envíe si hay campos vacíos
+        }
+
+        return true; // Permite que el formulario se envíe si la validación es exitosa
+    }
+</script>

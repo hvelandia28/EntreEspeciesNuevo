@@ -1,0 +1,277 @@
+﻿@model EntreEspeciesNuevo.Models.Mascota
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    body {
+        display: flex;
+        background-image: url('/images/fondo.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    .container {
+        margin-top: 50px;
+    }
+
+    .form-container {
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 20px;
+        border: 2px solid #007BFF;
+        border-radius: 10px;
+        margin: 0 auto;
+        max-width: 400px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-control {
+        width: 100%;
+    }
+
+    .btn-primary {
+        background-color: #007BFF;
+        border-color: #007BFF;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+    .center-btn {
+        text-align: center;
+    }
+</style>
+
+<div class="container">
+    <h1>Mascota</h1>
+    <hr />
+
+    <div class="row">
+        <div class="col-md-4 form-container">
+            <form asp-action="Create" id="form">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <p>Datos del Cliente:</p>
+                <div class="form-group">
+                    <label asp-for="DocumentoCliente" class="control-label" onkeydown="validatedocumento(event)">Documento del Cliente</label>
+                    <select asp-for="DocumentoCliente" class="form-control" asp-items="ViewBag.DocumentoCliente"></select>
+                </div>
+                <p>Datos de la Mascota:</p>
+                <div class="form-group">
+                    <label asp-for="NombreMascota" class="control-label">Nombre</label>
+                    <input asp-for="NombreMascota" class="form-control" oninput="validatenombre(event)" />
+                    <span asp-validation-for="NombreMascota" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="FechaNacimiento" class="control-label">Fecha Nacimiento</label>
+                    <input asp-for="FechaNacimiento" class="form-control" type="datetime-local" />
+                    <span asp-validation-for="FechaNacimiento" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ColorMascota" class="control-label">Color</label>
+                    <input asp-for="ColorMascota" class="form-control" oninput="validatecolor(event)" />
+                    <span asp-validation-for="ColorMascota" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Especie" class="control-label">Especie</label>
+                    <input asp-for="Especie" class="form-control" oninput=" validateespecie(event)" />
+                    <span asp-validation-for="Especie" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Raza" class="control-label">Raza</label>
+                    <input asp-for="Raza" class="form-control" oninput=" validateraza(event)" />
+                    <span asp-validation-for="Raza" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Genero" class="control-label">Seleccione el Genero</label>
+                    <select asp-for="Genero" class="form-control">
+                        <option value="Macho">Macho</option>
+                        <option value="Hembra">Hembra</option>
+                    </select>
+                    <span asp-validation-for="Genero" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="InfMascota" class="control-label">Descripción Detallada</label>
+                    <textarea asp-for="InfMascota" class="form-control"></textarea>
+                    <span asp-validation-for="InfMascota" class="text-danger"></span>
+                </div>
+
+@*                 <div class="form-group">
+                    <label asp-for="InfMascota" class="control-label">Descripción Breve</label>
+                    <input asp-for="InfMascota" class="form-control" />
+                    <span asp-validation-for="InfMascota" class="text-danger"></span>
+                </div> *@
+                <center>
+                    <div class="form-group">
+                        <input type="submit" value="Crear" />
+                    </div>
+
+                    <div>
+                        <a asp-action="Index">Cencelar</a>
+                    </div>
+                </center>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+
+        $(document).ready(function () {
+            // Script para la validación de la fecha
+            var fechaInput = $('input[name="FechaNacimiento"]');
+            fechaInput.attr('max', new Date().toISOString().slice(0, 16));
+
+            fechaInput.change(function () {
+                var selectedDate = new Date($(this).val());
+                var currentDate = new Date();
+
+                if (selectedDate > currentDate) {
+                    alert("No se puede seleccionar una fecha futura. Por favor, elige una fecha igual o anterior a la actual.");
+                    $(this).val("");
+                }
+            });
+        });
+
+
+
+        $("#form").submit(function () {
+            if (!validarCampo('NombreMascota', 'Debe Ingresar un Nombre para la Mascota')) return false;
+            if (!validarCampo('FechaNacimiento', 'Debe Ingresar una Fecha de Nacimiento para la Mascota')) return false;
+            if (!validarCampo('ColorMascota', 'Debe Ingresar un Color para la Mascota')) return false;
+            if (!validarCampo('Especie', 'Debe Ingresar una Especie para la Mascota')) return false;
+            if (!validarCampo('Raza', 'Debe Ingresar una Raza para la Mascota')) return false;
+            if (!validarCampo('Genero', 'Debe Ingresar un Género para la Mascota')) return false;
+            if (!validarCampo('InfMascota', 'Debe Ingresar Información sobre la Mascota')) return false;
+            if (!validarCampo('Estado', 'Debe Ingresar un Estado para la Mascota')) return false;
+
+            // Mostrar ventana de confirmación
+            mostrarAlerta();
+            return true; // Evitar el envío del formulario
+        });
+
+        function validarCampo(nombreCampo, mensaje) {
+            if ($("[name='" + nombreCampo + "']").val().trim().length < 1) {
+                mostrarAlertaWarning(mensaje);
+                return false;
+            }
+            return true;
+        }
+
+        function mostrarAlertaWarning(mensaje) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Por Favor Llene Los Campos',
+                text: mensaje,
+                footer: 'Sistema de Información'
+            });
+        }
+
+        // function mostrarAlerta() {
+        //     Swal.fire({
+        //         icon: 'success',
+        //         title: 'Registro Exitoso',
+        //         text: 'El Cliente se registró correctamente.',
+        //         footer: 'Sistema de Información',
+        //         showConfirmButton: false
+        //     });
+
+        //     setTimeout(function () {
+        //         // window.location.href = 'Clientes';
+        //         window.location.href = '/Clientes/Index';
+
+        //     }, 3000);
+        // }
+
+        function validatenombre(event) {
+            const inputValue = event.target.value;
+
+            if (/[^a-zA-Z\s]/.test(inputValue)) {
+                event.target.value = inputValue.replace(/[^a-zA-Z\s]/g, '');
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Carácter inválido',
+                    text: 'Solo se permite ingresar letras',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+        }
+        function validatecolor(event) {
+            const inputValue = event.target.value;
+
+            if (/[^a-zA-Z\s]/.test(inputValue)) {
+                event.target.value = inputValue.replace(/[^a-zA-Z\s]/g, '');
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Carácter inválido',
+                    text: 'Solo se permite ingresar letras',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+        }
+        function validateespecie(event) {
+            const inputValue = event.target.value;
+
+            if (/[^a-zA-Z\s]/.test(inputValue)) {
+                event.target.value = inputValue.replace(/[^a-zA-Z\s]/g, '');
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Carácter inválido',
+                    text: 'Solo se permite ingresar letras',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+        }
+        function validateraza(event) {
+            const inputValue = event.target.value;
+
+            if (/[^a-zA-Z\s]/.test(inputValue)) {
+                event.target.value = inputValue.replace(/[^a-zA-Z\s]/g, '');
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Carácter inválido',
+                    text: 'Solo se permite ingresar letras',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+        }
+        function validatedocumento(event) {
+            const keyCode = event.keyCode || event.which;
+            const allowedKeys = [8, 9, 37, 39, 46]; // Teclas permitidas: retroceso, tabulación, flechas izquierda/derecha, suprimir
+            const inputValue = event.target.value;
+
+            if (!allowedKeys.includes(keyCode) && isNaN(inputValue)) {
+                // Eliminar el último carácter ingresado
+                event.target.value = event.target.value.slice(0, -1);
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Carácter inválido',
+                    text: 'Solo se permite ingresar números',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+        }
+    </script>
+}

@@ -1,0 +1,144 @@
+﻿@model EntreEspeciesNuevo.Models.Compra
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<head>
+    <!-- Otros elementos del head -->
+    <!-- Agrega el script de SweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+</head>
+<style>
+    body {
+        display: flex;
+        background-image: url('/images/fondo.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    .container {
+        margin-top: 50px;
+    }
+
+    .form-container {
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 20px;
+        border: 2px solid #007BFF;
+        border-radius: 10px;
+        margin: 0 auto;
+        max-width: 400px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-control {
+        width: 100%;
+    }
+
+    .btn-primary {
+        background-color: #007BFF;
+        border-color: #007BFF;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+    .btn-cancel {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        color: #fff;
+    }
+
+        .btn-cancel:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+            color: #fff;
+        }
+
+    .center-btn {
+        text-align: center;
+    }
+</style>
+
+<div class="container">
+    <h1>Compra</h1>
+    <hr />
+
+    <div class="row">
+        <div class="col-md-4 form-container">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-group">
+                    <label asp-for="FechaCompra" class="control-label">Fecha de la Compra</label>
+                    <input asp-for="FechaCompra" class="form-control" type="datetime-local" />
+                    <span asp-validation-for="FechaCompra" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="FormaPago" class="control-label">Forma de Pago</label>
+                    <select asp-for="FormaPago" class="form-control">
+                        <option value="">Seleccione la forma de pago</option>
+                        <option value="Efectivo">Efectivo</option>
+                        <option value="Tarjetas de débito y crédito">Tarjetas de débito y crédito</option>
+                        <option value="Transferencias bancarias">Transferencias bancarias</option>
+                        <option value="Cheques">Cheques</option>
+                    </select>
+                    <span asp-validation-for="FormaPago" class="text-danger"></span>
+                </div>
+                <center>
+                    <div class="form-group center-btn">
+                        <button type="submit" class="btn btn-primary">Crear</button>
+                    </div>
+                    <a asp-action="Index" class="btn btn-cancel">Cancelar</a>
+                </center>
+            </form>
+
+            <div class="form-group center-btn">
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function () {
+            $('form').submit(function (event) {
+                // Verificar si se ha seleccionado una forma de pago
+                var formaPago = $('#FormaPago').val();
+                if (!formaPago) {
+                    // Mostrar SweetAlert en lugar de la alerta por defecto
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Debes seleccionar una forma de pago.'
+                    });
+
+                    event.preventDefault(); // Evitar que el formulario se envíe
+                }
+            });
+
+            // Script para la validación de la fecha
+            var fechaInput = $('input[name="FechaCompra"]');
+            fechaInput.attr('min', new Date().toISOString().slice(0, 16));
+
+            fechaInput.change(function () {
+                var selectedDate = new Date($(this).val());
+                var currentDate = new Date();
+
+                if (selectedDate < currentDate) {
+                    alert("No se puede seleccionar una fecha pasada. Por favor, elige una fecha futura.");
+                    $(this).val("");
+                }
+            });
+        });
+    </script>
+}

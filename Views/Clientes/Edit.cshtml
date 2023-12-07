@@ -1,0 +1,121 @@
+﻿@model EntreEspeciesNuevo.Models.Cliente
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    /* Estilos generales */
+    body {
+        display:flex;
+        background-color: #f0f8ff; /* Azul claro */
+        color: #333; /* Color de texto principal */
+    }
+
+    h1 {
+        color: #4169e1; /* Azul real */
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    /* Estilos para la sección de edición de cliente */
+    .edit-section {
+        margin: auto;
+        max-width: 400px;
+        padding: 20px;
+        border: 1px solid #ddd; /* Borde gris claro */
+        border-radius: 5px;
+        background-color: #fff;
+    }
+
+        .edit-section h4 {
+            color: #4169e1; /* Azul real */
+            text-align: center;
+        }
+
+    /* Estilos para el formulario de edición */
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    /* Enlace de acción */
+    a {
+        color: #4169e1; /* Azul real */
+        text-decoration: none;
+        font-weight: bold;
+        margin-right: 10px;
+        display: block;
+        text-align: center;
+        margin-top: 10px;
+    }
+
+        a:hover {
+            text-decoration: underline;
+        }
+</style>
+
+<h1>EDITAR CLIENTE</h1>
+
+<div class="edit-section">
+    <h4>Cliente</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="DocumentoCliente" />
+                <div class="form-group">
+                    <label asp-for="TipoDocu" class="control-label">Tipo Documento</label>
+                    <select asp-for="TipoDocu" class="form-control">
+                        <option value="Cedula de Ciudadania">Cedula de Ciudadania</option>
+                        <option value="Cedula de extranjeria">Cedula de extranjeria</option>
+                        <option value="Pasaporte">Pasaporte</option>
+                    </select>
+                    <span asp-validation-for="TipoDocu" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DocumentoCliente" class="control-label">N° Documento</label>
+                    <input asp-for="DocumentoCliente" class="form-control" disabled />
+                    <span asp-validation-for="DocumentoCliente" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="NombreCliente" class="control-label">Nombre</label>
+                    <input asp-for="NombreCliente" class="form-control" />
+                    <span asp-validation-for="NombreCliente" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Direccion" class="control-label">Dirección</label>
+                    <input asp-for="Direccion" class="form-control" />
+                    <span asp-validation-for="Direccion" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Telefono" class="control-label">Teléfono</label>
+                    <input asp-for="Telefono" class="form-control" />
+                    <span asp-validation-for="Telefono" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Correo" class="control-label"></label>
+                    <input asp-for="Correo" class="form-control" />
+                    <span asp-validation-for="Correo" class="text-danger"></span>
+                </div>
+                <center>
+                    <div class="form-group">
+                        <input type="submit" value="Guardar" class="btn btn-primary" />
+                    </div>
+                    <div class="form-group">
+                        <a asp-action="Index">Cancelar</a>
+                    </div>
+                </center>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
